@@ -1,26 +1,30 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import ProductService from "../../services/Product.Service";
-import type { Product } from "../../schemas/product.schema";
+import type { Product, ProductsResponse } from "../../schemas/product.schema";
 import LoadMoreButton from "./LoadMoreButton";
 import { Link } from "@tanstack/react-router";
 
 const Products = () => {
-    const baseUrl = "/posts"
-    const [products, setProducts] = useState<Product[]>([]);
+    const queryClient = useQueryClient();
+    // States
     const [page, setPage] = useState(1);
     const limitItemsPerPage = 8;
     const [itemsLimit, setItemsLimit] = useState(limitItemsPerPage);
     const [totalItems, setTotalItems] = useState(0);
+    
+    // Services
     const productService = new ProductService();
 
-    useEffect(() => {
-        productService.getAll(page, itemsLimit).then( response => { 
-            setProducts(response.Products);
-            setTotalItems(response.Pagination.totalItems);
-        });
-    }, []);
+    // Functions
+    const getAllProducts = async (): Promise<ProductsResponse> => {
+        const response = await productService.getAll(page, itemsLimit);
+        //setProducts(response.Products);
+        setTotalItems(response.Pagination.totalItems);
+        return response;
+    }
 
-    const handleShowMore = () => {
+    const handleShowMore = async  () => {
         // Check if we already grabbed all product items
         if(itemsLimit >= totalItems) {
             return;
@@ -28,12 +32,34 @@ const Products = () => {
         
         const newPage = page + 1;
         const newLimit = limitItemsPerPage * newPage;
-        
-        productService.getAll(newPage, newLimit).then( response => { 
-            setPage(newPage);
-            setItemsLimit(newLimit);
-            setProducts(response.Products);
-        });
+
+        setPage(newPage);
+        setItemsLimit(newLimit);
+    }
+
+    // Tanstack Queries
+    const { data: response, isLoading } = useQuery({
+        queryFn: () => getAllProducts(),
+        queryKey:["allProductsResponse"]
+    });
+
+    //Tanstack Mutations
+    const { mutateAsync: showMoreMutation } = useMutation({
+        mutationFn: handleShowMore,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["allProductsResponse"] });
+        }
+    });
+
+    //const [products, setProducts] = useState<Product[]>([]);
+    
+
+    if(isLoading) {
+        return(
+            <div>
+                <b>Loading...</b>
+            </div>
+        )
     }
 
     return(
@@ -41,7 +67,7 @@ const Products = () => {
         <h1 className="poppins-bold text-center text-4xl p-10 text-bold-gray">Our Products</h1>
         <div className="flex justify-center">
             <div className="grid grid-cols-4 gap-8 w-[1236px] auto-rows-[446px]">
-            { products.map( (product) => (
+            { response?.Products.map( (product: Product) => (
                 
                 <div key={product.id} className="h-full bg-light-BG">
                    <Link 
@@ -59,7 +85,16 @@ const Products = () => {
             )) }
             </div>
         </div>
-        {itemsLimit < totalItems && <LoadMoreButton onShowMore={handleShowMore}/>}
+        {itemsLimit < totalItems && <LoadMoreButton onShowMore={
+            async () => {
+                try {
+                    await showMoreMutation()
+                    handleShowMore;
+                } catch (error) {
+                    console.log(error);
+                }  
+            }
+        }/>}
         </>
         
         
