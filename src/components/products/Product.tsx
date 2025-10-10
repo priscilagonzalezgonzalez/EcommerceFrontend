@@ -1,0 +1,35 @@
+import { useState } from "react";
+import type { Product as ProductType } from "../../schemas/product.schema";
+import AddToCart from "./AddToCart";
+import ProductColor from "./ProductColor";
+import ProductSize from "./ProductSize";
+
+const Product = ( {product}: {product: ProductType}  ) => {
+
+    const [products, setProducts] = useState<ProductType>();
+
+    return (
+        <>
+        <div className="grid grid-cols-2 gap-10 p-10">
+            <img src={product.image} alt="" className="h-[500px] rounded-xl w-[500px]" />
+            <div>
+                <h1 className="text-4xl poppins-regular">{product.name}</h1>
+                
+                <p className="text-2xl poppins-medium text-light-gray pt-4">{product.price}</p>
+                
+                <p className="poppins-regular text-lg pt-4">{product.description}</p>
+
+                <ProductSize />
+
+                <ProductColor />
+
+                <AddToCart/>
+
+            </div>
+        </div>
+        
+        </>
+    )
+}
+
+export default Product;
