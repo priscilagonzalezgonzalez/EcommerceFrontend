@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Navigation from '../../components/Navigation'
 import ProductService from "../../services/Product.Service";
 import type { Product, ProductsResponse } from "../../schemas/product.schema";
 import LoadMoreButton from "./LoadMoreButton";
@@ -64,6 +65,8 @@ const Products = () => {
 
     return(
         <>
+        
+        <Navigation/>
         <h1 className="poppins-bold text-center text-4xl p-10 text-bold-gray">Our Products</h1>
         <div className="flex justify-center">
             <div className="grid grid-cols-4 gap-8 w-[1236px] auto-rows-[446px]">
