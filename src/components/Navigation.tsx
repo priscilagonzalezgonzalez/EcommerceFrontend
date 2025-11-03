@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 
-const Navigation = () => {
+const Navigation = ({productName, productId} : {productName: string | undefined, productId: number | undefined}) => {
 
     return(
         <>
@@ -15,18 +15,31 @@ const Navigation = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                 </svg>
 
+
+                { productName && productId ? (
+                    <>
+                    <div>
+                        <Link to="/products" >
+                            Shop
+                        </Link>
+                        
+                    </div>
+                    <div className="border-l border-l-2">
+                        <Link to="/products/$productId" params={{ productId: productId!.toString() }} className="[&.active]:font-bold pl-10">
+                            {productName}
+                        </Link>
+                    </div>
+
+                    </>
+                    
+                ) : (
+                <>
                 <div>
                     <Link to="/products" className="[&.active]:font-bold">
                         Shop
                     </Link>
-                    
                 </div>
-
-                <div className="border-l border-l-2">
-                    <Link to="/about" className="[&.active]:font-bold pl-10">
-                        {"product"}
-                    </Link>
-                </div>
+                </>) }
                 
             </div>
 

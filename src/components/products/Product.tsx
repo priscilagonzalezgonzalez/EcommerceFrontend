@@ -9,7 +9,7 @@ const Product = ( {product}: {product: ProductType}  ) => {
     return (
         <>
         
-        <Navigation/>
+        <Navigation productName = {product.name} productId = {product.id}/>
         <div className="grid grid-cols-2 gap-10 p-10">
             <img src={product.image} alt="" className="h-[500px] rounded-xl w-[500px]" />
             <div>

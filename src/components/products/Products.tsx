@@ -66,7 +66,7 @@ const Products = () => {
     return(
         <>
         
-        <Navigation/>
+        <Navigation productName = {undefined} productId = {undefined}/>
         <h1 className="poppins-bold text-center text-4xl p-10 text-bold-gray">Our Products</h1>
         <div className="flex justify-center">
             <div className="grid grid-cols-4 gap-8 w-[1236px] auto-rows-[446px]">
