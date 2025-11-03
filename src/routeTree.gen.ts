@@ -13,8 +13,11 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as NavBarRouteImport } from './routes/nav-bar'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductsIndexRouteImport } from './routes/products/index'
+import { Route as CheckoutIndexRouteImport } from './routes/checkout/index'
+import { Route as CartIndexRouteImport } from './routes/cart/index'
 import { Route as ProductsProductIdRouteImport } from './routes/products/$productId'
 
 const AboutLazyRouteImport = createFileRoute('/about')()
@@ -34,6 +37,11 @@ const HomeRoute = HomeRouteImport.update({
   path: '/home',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -44,6 +52,16 @@ const ProductsIndexRoute = ProductsIndexRouteImport.update({
   path: '/products/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CheckoutIndexRoute = CheckoutIndexRouteImport.update({
+  id: '/checkout/',
+  path: '/checkout/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CartIndexRoute = CartIndexRouteImport.update({
+  id: '/cart/',
+  path: '/cart/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProductsProductIdRoute = ProductsProductIdRouteImport.update({
   id: '/products/$productId',
   path: '/products/$productId',
@@ -52,62 +70,83 @@ const ProductsProductIdRoute = ProductsProductIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
   '/home': typeof HomeRoute
   '/nav-bar': typeof NavBarRoute
   '/about': typeof AboutLazyRoute
   '/products/$productId': typeof ProductsProductIdRoute
+  '/cart': typeof CartIndexRoute
+  '/checkout': typeof CheckoutIndexRoute
   '/products': typeof ProductsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
   '/home': typeof HomeRoute
   '/nav-bar': typeof NavBarRoute
   '/about': typeof AboutLazyRoute
   '/products/$productId': typeof ProductsProductIdRoute
+  '/cart': typeof CartIndexRoute
+  '/checkout': typeof CheckoutIndexRoute
   '/products': typeof ProductsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
   '/home': typeof HomeRoute
   '/nav-bar': typeof NavBarRoute
   '/about': typeof AboutLazyRoute
   '/products/$productId': typeof ProductsProductIdRoute
+  '/cart/': typeof CartIndexRoute
+  '/checkout/': typeof CheckoutIndexRoute
   '/products/': typeof ProductsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/contact'
     | '/home'
     | '/nav-bar'
     | '/about'
     | '/products/$productId'
+    | '/cart'
+    | '/checkout'
     | '/products'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/contact'
     | '/home'
     | '/nav-bar'
     | '/about'
     | '/products/$productId'
+    | '/cart'
+    | '/checkout'
     | '/products'
   id:
     | '__root__'
     | '/'
+    | '/contact'
     | '/home'
     | '/nav-bar'
     | '/about'
     | '/products/$productId'
+    | '/cart/'
+    | '/checkout/'
     | '/products/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ContactRoute: typeof ContactRoute
   HomeRoute: typeof HomeRoute
   NavBarRoute: typeof NavBarRoute
   AboutLazyRoute: typeof AboutLazyRoute
   ProductsProductIdRoute: typeof ProductsProductIdRoute
+  CartIndexRoute: typeof CartIndexRoute
+  CheckoutIndexRoute: typeof CheckoutIndexRoute
   ProductsIndexRoute: typeof ProductsIndexRoute
 }
 
@@ -134,6 +173,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -148,6 +194,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/checkout/': {
+      id: '/checkout/'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cart/': {
+      id: '/cart/'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/products/$productId': {
       id: '/products/$productId'
       path: '/products/$productId'
@@ -160,10 +220,13 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ContactRoute: ContactRoute,
   HomeRoute: HomeRoute,
   NavBarRoute: NavBarRoute,
   AboutLazyRoute: AboutLazyRoute,
   ProductsProductIdRoute: ProductsProductIdRoute,
+  CartIndexRoute: CartIndexRoute,
+  CheckoutIndexRoute: CheckoutIndexRoute,
   ProductsIndexRoute: ProductsIndexRoute,
 }
 export const routeTree = rootRouteImport
