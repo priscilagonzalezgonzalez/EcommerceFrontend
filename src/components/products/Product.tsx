@@ -3,8 +3,10 @@ import AddToCart from "./AddToCart";
 import ProductColor from "./ProductColor";
 import ProductSize from "./ProductSize";
 import Navigation from '../../components/Navigation'
+import { useState } from "react";
 
 const Product = ( {product}: {product: ProductType}  ) => {
+    const [quantity, setQuantity] = useState(1);
 
     return (
         <>
@@ -23,7 +25,7 @@ const Product = ( {product}: {product: ProductType}  ) => {
 
                 <ProductColor />
 
-                <AddToCart/>
+                <AddToCart product={product}/>
 
             </div>
         </div>

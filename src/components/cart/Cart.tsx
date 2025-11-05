@@ -3,7 +3,7 @@ import CartItems from "./CartItems";
 import CartBill from "./CartBill";
 
 const Cart = () => {
-
+    
     return(
         <>
         <CartBanner />

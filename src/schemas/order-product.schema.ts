@@ -5,6 +5,18 @@ export const orderProductSchema = z.object({
     quantity: int().nonnegative(),
 })
 
+export const CartItemSchema = z.object({
+    productId: z.number(),
+    image: z.string(),
+    name: z.string(),
+    price: z.number(),
+    quantity: z.number(),
+    subtotal: z.number(),
+});
+
+// extract the inferred type
+export type CartItem = z.infer<typeof CartItemSchema>
+
 /* export const OrderProductApiResponse = z.object({
     pagination:
     data:z.array(orderProductSchema),

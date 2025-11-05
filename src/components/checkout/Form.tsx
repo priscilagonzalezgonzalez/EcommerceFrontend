@@ -4,9 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import OrderService from "../../services/OrderService"
 import { type Order, orderSchema, formSchema, type FormSchema  } from "../../schemas/order.schema"
+import { useCartStore } from "../../stores/useCartStore"
 
 
 const Form = () => {
+    const items = useCartStore((state) => state.items);
+    const total = useCartStore((state) => state.total);
 
     const {
         register,
@@ -21,10 +24,11 @@ const Form = () => {
 
         const order: Order = {
             status: "pending",
-            total: 0,
+            total: total,
             shippingDetails: data,
-            orderProduct: []
+            orderProducts: Array.from(items.values())
         }
+        console.log(order);
         const orderService = new OrderService();
         orderService.createOrder(order);
     };
@@ -38,12 +42,12 @@ const Form = () => {
             <h1 className="poppins-semibold text-4xl">Billing details</h1>
             <form onSubmit={handleSubmit(onSubmit)} className="py-8">
                 <div>
-                    <p className="pb-4 poppins-medium">First Name
+                    <p className="pb-4 poppins-medium">Full Name
                         <span className="text-red-500 ml-1">*</span>
                     </p>
                     <input type="text" id="" className="border border-light-gray rounded-md h-[55px] w-full p-2"
-                        {...register("costumerName")}/>
-                        {errors.costumerName && <div className="pt-1"> <Alert severity="error" >{errors.costumerName.message}</Alert> </div>}
+                        {...register("customerName")}/>
+                        {errors.customerName && <div className="pt-1"> <Alert severity="error" >{errors.customerName.message}</Alert> </div>}
                     
                 </div>
 

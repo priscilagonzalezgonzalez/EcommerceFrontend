@@ -15,9 +15,6 @@ const NavBar = () => {
                 <Link to="/products" className="[&.active]:font-bold">
                     Home
                 </Link>
-                <Link to="/products" className="[&.active]:font-bold">
-                    Shop
-                </Link>
                 <Link to="/about" className="[&.active]:font-bold">
                     About
                 </Link>

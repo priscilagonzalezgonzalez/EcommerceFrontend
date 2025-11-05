@@ -3,7 +3,7 @@ import { orderProductSchema } from './order-product.schema'
 
 
 export const formSchema = z.object({
-    costumerName: z.string().min(1, "Name is required").max(255),
+    customerName: z.string().min(1, "Name is required").max(255),
     country: z.string().min(1, "Country is required").max(4),
     street: z.string().min(1, "Street address is required"),
     city: z.string().min(1, "City is required"),
@@ -18,7 +18,7 @@ export const orderSchema = z.object({
     status: z.enum(['pending', 'paid', 'shipped', 'cancelled']),
     total: z.number().nonnegative(),
     shippingDetails: formSchema,
-    orderProduct: z.array(orderProductSchema).default([]),
+    orderProducts: z.array(orderProductSchema).default([]),
 });
 
 export type Order = z.infer<typeof orderSchema>;
