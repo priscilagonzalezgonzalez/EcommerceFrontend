@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import logo from "../assets/logo.png";
 import { useCartStore } from "../stores/useCartStore";
+import { motion } from "framer-motion";
 
 const NavBar = () => {
     const totalItems = useCartStore((state) => state.totalItems);
@@ -49,8 +50,24 @@ const NavBar = () => {
                     </svg>
                     
                     {totalItems > 0 && (
-                        <span className="poppins-medium text-base absolute -right-2 -top-4">{totalItems}</span>
+                        <motion.div
+                            key={totalItems}    
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ 
+                                type: "spring",
+                                stiffness: 500,
+                                damping: 15
+                            }}
+                            className="absolute -right-3 -top-5"
+                        >
+                            <div className="bg-medium-gold w-6 h-6 flex justify-center rounded-full">
+                                <span className=" poppins-medium text-base text-white">{totalItems}</span>
+                            </div>
+                            
+                        </motion.div>
                     )}
+                    
                 </Link>
 
                 <Link to="/contact" className="[&.active]:font-bold">
