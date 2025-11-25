@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useCartStore } from "../../stores/useCartStore";
 import type { Product } from "../../schemas/product.schema";
+import {Toaster} from 'react-hot-toast'
 
-const AddToCart = ({ product }: { product: Product }) => {
+const AddToCart = ({ product, showToast }: { product: Product; showToast: () => void }) => {
     const [quantity, setQuantity] = useState(1);
 
     const reduceQuantity = () => {
@@ -28,6 +29,8 @@ const AddToCart = ({ product }: { product: Product }) => {
             subtotal: product.price * quantity
         };
         addItemToCart(cartItem);
+
+        showToast();
     }
 
     return(
@@ -50,6 +53,10 @@ const AddToCart = ({ product }: { product: Product }) => {
             <button className="text-dark-gold border rounded-lg px-12 cursor-pointer hover:bg-dark-gold hover:text-white">
                 + Compare
             </button>
+
+            <Toaster
+            position="bottom-center"
+            />
         </div>
         </>
     )

@@ -1,9 +1,8 @@
 import Alert from "@mui/material/Alert"
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
 import OrderService from "../../services/OrderService"
-import { type Order, orderSchema, formSchema, type FormSchema  } from "../../schemas/order.schema"
+import { type Order, formSchema, type FormSchema  } from "../../schemas/order.schema"
 import { useCartStore } from "../../stores/useCartStore"
 
 
