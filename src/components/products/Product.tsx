@@ -3,10 +3,11 @@ import AddToCart from "./AddToCart";
 import ProductColor from "./ProductColor";
 import ProductSize from "./ProductSize";
 import Navigation from '../../components/Navigation'
-import { useState } from "react";
+import toast from 'react-hot-toast'
 
 const Product = ( {product}: {product: ProductType}  ) => {
-    const [quantity, setQuantity] = useState(1);
+
+    const onAddToCart = () => toast.success('Added to cart!');
 
     return (
         <>
@@ -25,7 +26,7 @@ const Product = ( {product}: {product: ProductType}  ) => {
 
                 <ProductColor />
 
-                <AddToCart product={product}/>
+                <AddToCart product={product} showToast={onAddToCart}/>
 
             </div>
         </div>

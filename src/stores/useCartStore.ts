@@ -6,6 +6,7 @@ type CartState = {
     total: number;
     items: Map<number, CartItem>;
     status: string;
+    totalItems: number;
 
     addItemToCart: (product: CartItem) => void;
     removeItem: (product: CartItem) => void;
@@ -18,6 +19,7 @@ export const useCartStore = create<CartState>((set) => ({
     total: 0,
     items: new Map(),
     status: "pending",
+    totalItems: 0,
 
     addItemToCart: (product) => 
         set((state) => { 
@@ -26,6 +28,7 @@ export const useCartStore = create<CartState>((set) => ({
             let newTotal;
             let newQuantity = product.quantity;
             let newSubtotal = product.price * newQuantity;
+            const newTotalItems = product.quantity + state.totalItems;
 
             const currentItem = state.items.get(product.productId);
             if(currentItem){
@@ -50,7 +53,7 @@ export const useCartStore = create<CartState>((set) => ({
                 newTotal = state.total + newCartItem.subtotal;
             }
 
-            return { ...state, items: newItems, total: newTotal };
+            return { ...state, items: newItems, total: newTotal, totalItems: newTotalItems };
         }),
 
     removeItem: (product) =>
@@ -58,16 +61,14 @@ export const useCartStore = create<CartState>((set) => ({
             state.items.delete(product.productId);
             const newItems = new Map(state.items); 
             const newTotal = state.total - product.subtotal;
+            const newTotalItems = state.totalItems - product.quantity;
 
-            return { ...state, items: newItems, total: newTotal}
+            return { ...state, items: newItems, total: newTotal, totalItems: newTotalItems}
         }),
 
     clearCart: () => 
         set((state) => {
-            const newItems = new Map();
-            const newTotal = 0;
-
-            return { ...state, items: newItems, total: newTotal}
+            return { ...state, items: new Map(), total: 0, totalItems: 0}
         }),
 
     updateItemQuantity: (product) =>
@@ -76,12 +77,14 @@ export const useCartStore = create<CartState>((set) => ({
             const currentItem = state.items.get(product.productId);
 
             const currentSubtotal = currentItem?.subtotal ?? 0;
+            const currentTotalItems = currentItem?.quantity ?? 0;
             const newSubtotal = product.price * product.quantity;
-            const newCartItem = {...product, subtotal: newSubtotal}
+            const newCartItem = {...product, subtotal: newSubtotal};
             newItems.set(product.productId, newCartItem);
 
             const newTotal = state.total - currentSubtotal + newCartItem.subtotal;
+            const newTotalItems = state.totalItems - currentTotalItems + newCartItem.quantity;
 
-            return { ...state, items: newItems, total: newTotal}
+            return { ...state, items: newItems, total: newTotal, totalItems: newTotalItems}
         }),
 }));

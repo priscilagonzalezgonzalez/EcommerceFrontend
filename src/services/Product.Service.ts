@@ -7,7 +7,7 @@ export default class ProductService {
     // Get all products
     public async getAll(page: number, limit:number) : Promise<ProductsResponse> {
         try {
-            const response = await fetch(`${this.baseUrl}?page=${page}?limit=${limit}`);
+            const response = await fetch(`${this.baseUrl}?page=${page}&limit=${limit}`);
             const data = await response.json();
             return {
                 Products: data.data,
