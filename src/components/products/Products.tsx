@@ -13,13 +13,10 @@ const Products = () => {
     const limitItemsPerPage = 8;
     const [itemsLimit, setItemsLimit] = useState(limitItemsPerPage);
     const [totalItems, setTotalItems] = useState(0);
-    
-    // Services
-    const productService = new ProductService();
 
     // Functions
     const getAllProducts = async (): Promise<ProductsResponse> => {
-        const response = await productService.getAll(page, itemsLimit);
+        const response = await ProductService.getAll(page, itemsLimit);
         //setProducts(response.Products);
         setTotalItems(response.Pagination.totalItems);
         return response;

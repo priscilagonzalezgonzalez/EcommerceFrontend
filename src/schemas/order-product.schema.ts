@@ -12,6 +12,7 @@ export const CartItemSchema = z.object({
     price: z.number(),
     quantity: z.number(),
     subtotal: z.number(),
+    stock: z.number().nonnegative()
 });
 
 // extract the inferred type
