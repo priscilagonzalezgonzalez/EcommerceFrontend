@@ -24,26 +24,27 @@ const AddToCart = ({ product, showToast }: { product: Product; showToast: () => 
 
     const addItemToCart = useCartStore((state) => state.addItemToCart);
 
-    const OnAddCartItem = () => {
+    const OnAddCartItem = async () => {
         // We can add the SSE here
-        if (product.stock == 0) {
+        const newItem = await ProductService.getById(product.id.toString());
+        if (newItem.stock == 0) {
             toast.error("We're sorry. This product is out of stock");
             return;
         }
 
         const cartItem = {
-            productId: product.id,
-            image: product.image,
-            name: product.name,
-            price: product.price,
+            productId: newItem.id,
+            image: newItem.image,
+            name: newItem.name,
+            price: newItem.price,
             quantity: quantity,
-            subtotal: product.price * quantity,
-            stock: product.stock
+            subtotal: newItem.price * quantity,
+            stock: newItem.stock
         };
         addItemToCart(cartItem);
 
         // Change Stock
-        ProductService.modifyStock(product.id.toString(), product.stock - quantity);
+        await ProductService.modifyStock(product.id.toString(), newItem.stock - quantity);
 
         showToast();
     }

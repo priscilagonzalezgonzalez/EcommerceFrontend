@@ -8,31 +8,24 @@ import { Link } from "@tanstack/react-router";
 
 const Products = () => {
 
-    // SSE Test
-    const [time, setTime] = useState(""); 
-    const [sseStatus, setSseStatus] = useState<"connecting" | "connected" | "error" | "closed">("connecting");
-
     useEffect(() => {
         // Use environment variable for API URL, fallback to localhost if not set
         const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:4000";
         // SSE endpoint is at /api/v1/currentTime
-        const sseUrl = `${apiUrl}/currentTime`;
-        
-        console.log("🔌 VITE_API_URL:", import.meta.env.VITE_API_URL);
-        console.log("🔌 API URL:", apiUrl);
-        console.log("🔌 Connecting to SSE:", sseUrl);
+        const sseUrl = `${apiUrl}/products-stream`;
         const timeEventSource = new EventSource(sseUrl);
 
         // Handle connection open
         timeEventSource.onopen = () => {
             console.log("✅ SSE Connection opened");
-            setSseStatus("connected");
         };
 
         // Handle incoming messages
         timeEventSource.onmessage = (event) => {
             console.log("📨 SSE Message received:", event.data);
-            setTime(event.data);
+
+            // refetch query to get fresh items
+            queryClient.invalidateQueries({ queryKey: ["allProductsResponse"] });
         };
 
         // Handle errors
@@ -42,12 +35,9 @@ const Products = () => {
             console.error("EventSource URL:", timeEventSource.url);
             // readyState: 0 = CONNECTING, 1 = OPEN, 2 = CLOSED
             if (timeEventSource.readyState === EventSource.CLOSED) {
-                setSseStatus("closed");
                 console.log("🔴 SSE Connection closed - Check if server is running and endpoint exists");
                 console.log("💡 Try opening this URL in your browser:", timeEventSource.url);
-            } else {
-                setSseStatus("error");
-            }
+            } 
         };
 
         // Cleanup: close the connection when component unmounts
@@ -56,10 +46,9 @@ const Products = () => {
             timeEventSource.close();
         };
     }, []); // Empty dependency array - only run once on mount
-    
 
     const queryClient = useQueryClient();
-    // States
+    // Pagination States
     const [page, setPage] = useState(1);
     const limitItemsPerPage = 8;
     const [itemsLimit, setItemsLimit] = useState(limitItemsPerPage);
@@ -100,9 +89,6 @@ const Products = () => {
         }
     });
 
-    //const [products, setProducts] = useState<Product[]>([]);
-    
-
     if(isLoading) {
         return(
             <div>
@@ -115,23 +101,6 @@ const Products = () => {
         <>
         
         <Navigation productName = {undefined} productId = {undefined}/>
-        
-        <div className="text-center p-4 bg-gray-100">
-            <p className="poppins-regular">
-                Current Time (SSE): {time || "Waiting for connection..."}
-            </p>
-            <p className="poppins-regular text-sm mt-2">
-                Status: 
-                <span className={`ml-2 ${
-                    sseStatus === "connected" ? "text-green-600" :
-                    sseStatus === "error" ? "text-red-600" :
-                    sseStatus === "closed" ? "text-gray-600" :
-                    "text-yellow-600"
-                }`}>
-                    {sseStatus}
-                </span>
-            </p>
-        </div>
         
         <h1 className="poppins-bold text-center text-4xl p-10 text-bold-gray">Our Products</h1>
         <div className="flex justify-center">
@@ -157,8 +126,7 @@ const Products = () => {
         {itemsLimit < totalItems && <LoadMoreButton onShowMore={
             async () => {
                 try {
-                    await showMoreMutation()
-                    handleShowMore;
+                    await showMoreMutation();
                 } catch (error) {
                     console.log(error);
                 }  
