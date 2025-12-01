@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useCartStore } from "../../stores/useCartStore";
 import type { Product } from "../../schemas/product.schema";
-import {Toaster} from 'react-hot-toast'
+import {Toaster, toast} from 'react-hot-toast'
+import ProductService from "../../services/Product.Service";
 
 const AddToCart = ({ product, showToast }: { product: Product; showToast: () => void }) => {
     const [quantity, setQuantity] = useState(1);
@@ -13,22 +14,37 @@ const AddToCart = ({ product, showToast }: { product: Product; showToast: () => 
     }
 
     const incrementQuantity = () => {
-        // Check the product stock 
+        // Check the product stock
+        if(product.stock < quantity+1) {
+            toast.error(`We're sorry. There are no more than ${quantity} product in stock.`);
+            return;
+        }
         setQuantity(quantity + 1);
     }
 
     const addItemToCart = useCartStore((state) => state.addItemToCart);
 
-    const OnAddCartItem = () => {
+    const OnAddCartItem = async () => {
+        // We can add the SSE here
+        const newItem = await ProductService.getById(product.id.toString());
+        if (newItem.stock == 0) {
+            toast.error("We're sorry. This product is out of stock");
+            return;
+        }
+
         const cartItem = {
-            productId: product.id,
-            image: product.image,
-            name: product.name,
-            price: product.price,
+            productId: newItem.id,
+            image: newItem.image,
+            name: newItem.name,
+            price: newItem.price,
             quantity: quantity,
-            subtotal: product.price * quantity
+            subtotal: newItem.price * quantity,
+            stock: newItem.stock
         };
         addItemToCart(cartItem);
+
+        // Change Stock
+        await ProductService.modifyStock(product.id.toString(), newItem.stock - quantity);
 
         showToast();
     }

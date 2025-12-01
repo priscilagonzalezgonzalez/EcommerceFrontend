@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Navigation from '../../components/Navigation'
 import ProductService from "../../services/Product.Service";
@@ -7,19 +7,56 @@ import LoadMoreButton from "./LoadMoreButton";
 import { Link } from "@tanstack/react-router";
 
 const Products = () => {
+
+    useEffect(() => {
+        // Use environment variable for API URL, fallback to localhost if not set
+        const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:4000";
+        // SSE endpoint is at /api/v1/currentTime
+        const sseUrl = `${apiUrl}/products-stream`;
+        const timeEventSource = new EventSource(sseUrl);
+
+        // Handle connection open
+        timeEventSource.onopen = () => {
+            console.log("✅ SSE Connection opened");
+        };
+
+        // Handle incoming messages
+        timeEventSource.onmessage = (event) => {
+            console.log("📨 SSE Message received:", event.data);
+
+            // refetch query to get fresh items
+            queryClient.invalidateQueries({ queryKey: ["allProductsResponse"] });
+        };
+
+        // Handle errors
+        timeEventSource.onerror = (error) => {
+            console.error("❌ SSE Error:", error);
+            console.error("EventSource readyState:", timeEventSource.readyState);
+            console.error("EventSource URL:", timeEventSource.url);
+            // readyState: 0 = CONNECTING, 1 = OPEN, 2 = CLOSED
+            if (timeEventSource.readyState === EventSource.CLOSED) {
+                console.log("🔴 SSE Connection closed - Check if server is running and endpoint exists");
+                console.log("💡 Try opening this URL in your browser:", timeEventSource.url);
+            } 
+        };
+
+        // Cleanup: close the connection when component unmounts
+        return () => {
+            console.log("🧹 Cleaning up SSE connection");
+            timeEventSource.close();
+        };
+    }, []); // Empty dependency array - only run once on mount
+
     const queryClient = useQueryClient();
-    // States
+    // Pagination States
     const [page, setPage] = useState(1);
     const limitItemsPerPage = 8;
     const [itemsLimit, setItemsLimit] = useState(limitItemsPerPage);
     const [totalItems, setTotalItems] = useState(0);
-    
-    // Services
-    const productService = new ProductService();
 
     // Functions
     const getAllProducts = async (): Promise<ProductsResponse> => {
-        const response = await productService.getAll(page, itemsLimit);
+        const response = await ProductService.getAll(page, itemsLimit);
         //setProducts(response.Products);
         setTotalItems(response.Pagination.totalItems);
         return response;
@@ -52,9 +89,6 @@ const Products = () => {
         }
     });
 
-    //const [products, setProducts] = useState<Product[]>([]);
-    
-
     if(isLoading) {
         return(
             <div>
@@ -67,6 +101,7 @@ const Products = () => {
         <>
         
         <Navigation productName = {undefined} productId = {undefined}/>
+        
         <h1 className="poppins-bold text-center text-4xl p-10 text-bold-gray">Our Products</h1>
         <div className="flex justify-center">
             <div className="grid grid-cols-4 gap-8 w-[1236px] auto-rows-[446px]">
@@ -91,8 +126,7 @@ const Products = () => {
         {itemsLimit < totalItems && <LoadMoreButton onShowMore={
             async () => {
                 try {
-                    await showMoreMutation()
-                    handleShowMore;
+                    await showMoreMutation();
                 } catch (error) {
                     console.log(error);
                 }  

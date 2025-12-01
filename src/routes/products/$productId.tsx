@@ -6,8 +6,7 @@ export const Route = createFileRoute('/products/$productId')({
   component: RouteComponent,
   loader: async ({params}) => {
     const id = params.productId;
-    const productService = new ProductService();
-    const product = await productService.getById(id);
+    const product = await ProductService.getById(id);
     return {
       product,
     };
