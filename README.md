@@ -34,6 +34,7 @@
 
 ### Home
 ![Home Screenshot](Screenshots/Home.png)
+![Home Screenshot](Screenshots/Home2.png)
 
 ### Individual Product
 ![Product Screenshot](Screenshots/Product.png)
