@@ -9,6 +9,7 @@ import { useCartStore } from "../../stores/useCartStore"
 const Form = () => {
     const items = useCartStore((state) => state.items);
     const total = useCartStore((state) => state.total);
+    const totalItems = useCartStore((state) => state.totalItems);
 
     const {
         register,
@@ -101,7 +102,11 @@ const Form = () => {
                 </div>
 
                 <div className="flex justify-center">
-                    <button disabled={isSubmitting} type="submit" className="border rounded-xl w-[318px] h-[64px] poppins-regular text-lg cursor-pointer hover:text-white hover:bg-medium-gold">
+                    <button 
+                    disabled={isSubmitting || totalItems == 0} 
+                    type="submit" 
+                    className="border rounded-xl w-[318px] h-[64px] poppins-regular text-lg cursor-pointer hover:text-white hover:bg-medium-gold
+                    disabled:bg-gray-400 disabled:cursor-not-allowed">
                         {isSubmitting ? "Loading" : "Place order"}
                     </button>
                 </div>
