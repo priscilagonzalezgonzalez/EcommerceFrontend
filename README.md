@@ -42,22 +42,21 @@
 
 ## ✅ Implemented Features
 
-- Home view for all products.
+- Home view displaying all products.
 - Individual view to each product.
-- Cart view.
-- Checkout form.
+- Shopping cart with item management.
+- Checkout form with type-safe validation using Zod schemas.
 - Global state management using Zustand.
 - Server state management with TanStack Query.
 - Loading and error states for API requests.
 - Route management with TanStack Router.
-- Product and Checkout Form schema validation using Zod.
-- Real-time product updates using SSE (Server-Sent Events).
+- Real-time product updates via SSE (Server-Sent Events).
+- Persistent cart data using Zustand’s persist middleware.
 
 ## ✅ To-be Implemented Features
 
 - User sign-in, login, and logout views.
 - Change of theme: dark theme.
-- Data perssistence with Zustand
 
 ## 📸 Screenshots
 
