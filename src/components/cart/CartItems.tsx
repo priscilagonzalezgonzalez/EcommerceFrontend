@@ -9,6 +9,9 @@ import { useState } from 'react';
 
 import { useCartStore } from '../../stores/useCartStore';
 import { type CartItem } from '../../schemas/order-product.schema';
+import toast, { Toaster } from 'react-hot-toast';
+
+//const showToast = () => toast.success('Added to cart!');
 
 function QuantityInput({ item }: { item: CartItem }) {
   const [inputValue, setInputValue] = useState(item.quantity.toString());
@@ -16,9 +19,12 @@ function QuantityInput({ item }: { item: CartItem }) {
 
   const handleBlur = () => {
     const newQuantity = parseInt(inputValue);
-    if (newQuantity > 0) {
+    if (newQuantity > 0 && item.stock >= newQuantity) {
       updateItemQuantity({ ...item, quantity: newQuantity });
     } else {
+        if (item.quantity < newQuantity) {
+          toast.error(`We're sorry. There are no more than ${item.stock} product in stock.`);
+        }
       setInputValue(item.quantity.toString());
     }
   };
@@ -42,6 +48,7 @@ export default function CartItems() {
   const rows: CartItem[] = Array.from(items.values());
 
   return (
+    <>
     <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead sx={{ backgroundColor: '#F9F1E7', '& .MuiTableCell-head': { fontWeight: 'bold' } }}>
@@ -101,5 +108,9 @@ export default function CartItems() {
         </TableBody>
         </Table>
     </TableContainer>
+    <Toaster
+      position="bottom-center"
+    />
+    </>
   );
 }
