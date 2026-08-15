@@ -116,6 +116,7 @@ const Products = () => {
                         <h2 className="poppins-semibold text-dark-gray text-xl pt-2">{product.name}</h2>
                         <p className="poppins-medium text-medium-gray text-justify text-base pt-2">{product.description}</p>
                         <p className="poppins-semibold text-dark-gray pt-2"> ${product.price}</p>
+                        <p className="poppins-semibold text-dark-gray pt-2"> stock: {product.stock}</p>
                     </div>
                    </Link> 
                 </div>
