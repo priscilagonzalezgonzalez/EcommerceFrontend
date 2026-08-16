@@ -1,18 +1,18 @@
 import type { banner } from "../../schemas/banner.schema";
-import Banner from "../../utils/components/Banner";
+import Banner from "../../common/components/Banner";
 
 const CartBanner = () => {
-    const bannerProps : banner = {
-        mainTitle: 'Cart',
-        subtitle: 'Shop',
-        linkTo: '/products'
-    }
+  const bannerProps: banner = {
+    mainTitle: "Cart",
+    subtitle: "Shop",
+    linkTo: "/products",
+  };
 
-    return (
-        <>
-        <Banner {...bannerProps} />
-        </>
-    )
-}
+  return (
+    <>
+      <Banner {...bannerProps} />
+    </>
+  );
+};
 
 export default CartBanner;

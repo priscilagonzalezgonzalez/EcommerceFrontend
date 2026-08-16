@@ -4,6 +4,7 @@ import ProductColor from "./ProductColor";
 import ProductSize from "./ProductSize";
 import Navigation from '../../components/Navigation'
 import toast from 'react-hot-toast'
+import { resolveStockMessage } from "../../helpers/products/stock";
 
 const Product = ( {product}: {product: ProductType}  ) => {
 
@@ -25,6 +26,8 @@ const Product = ( {product}: {product: ProductType}  ) => {
                 <ProductSize />
 
                 <ProductColor />
+
+                <p className="poppins-regular text-lg pt-8">{resolveStockMessage(product.stock)}</p>
 
                 <AddToCart product={product} showToast={onAddToCart}/>
 

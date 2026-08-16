@@ -1,5 +1,4 @@
 import {type Order} from "../schemas/order.schema";
-import { z } from 'zod';
 
 export default class OrderService {
     private readonly baseUrl = `${import.meta.env.VITE_API_URL}/orders`;
@@ -28,5 +27,4 @@ export default class OrderService {
             console.error("❌ Error:", error);
         }
     }
-
 }
