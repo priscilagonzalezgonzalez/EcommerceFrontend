@@ -27,7 +27,7 @@ const AddToCart = ({
     // Check the product stock
     if (product.stock < totalNewQuantity + 1) {
       toast.error(
-        `We're sorry. There are no more than ${totalNewQuantity - 1} products in stock.`,
+        `We're sorry. There are no more than ${product.stock} products in stock.`,
       );
       return;
     }
@@ -37,6 +37,12 @@ const AddToCart = ({
   const addItemToCart = useCartStore((state) => state.addItemToCart);
 
   const getItemById = useCartStore((state) => state.getItemById);
+
+  const restartQuantitySelector = () => {
+    if (quantity > 1) {
+      setQuantity(1);
+    }
+  }
 
   const OnAddCartItem = async () => {
     // We can add the SSE here
@@ -66,6 +72,8 @@ const AddToCart = ({
       stock: newItem.stock,
     };
     addItemToCart(cartItem);
+
+    restartQuantitySelector();
 
     // Change Stock
     //await ProductService.modifyStock(product.id.toString(), newItem.stock - quantity);
